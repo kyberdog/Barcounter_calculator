@@ -30,8 +30,7 @@ python calc5.0_FINALLY.py
 
 ```
 git clone https://github.com/kyberdog/Barcounter_calculator.git
-# Установка Pillow для работы с изображениями
-pip install pillow
+pip install pillow    # Установка Pillow для работы с изображениями
 cd Barcounter_calculator
 python calc5.0_FINALLY.py
 ```
