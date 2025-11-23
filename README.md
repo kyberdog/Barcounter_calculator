@@ -16,9 +16,9 @@
 - pip (менеджер пакетов Python)
 
 Установка зависимостей
-
+'''
 # Установка Pillow для работы с изображениями
-pip install pillow
+pip install pillow'''
 
 Примечание: Библиотеки tkinter, math, urllib и io являются стандартными и обычно уже установлены в Python.
 
