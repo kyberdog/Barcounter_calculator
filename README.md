@@ -1,4 +1,3 @@
-[README.txt](https://github.com/user-attachments/files/23696752/README.txt)
 🍸 Барный Калькулятор
 
 ✨ Особенности
