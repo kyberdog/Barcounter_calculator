@@ -95,7 +95,7 @@ class Calculator:
         self.display = tk.Entry(
             self.window,
             textvariable=self.display_var,
-            font=('Arial', 28, 'bold'),
+            font=('DejaVu', 28, 'bold'),
             justify='right',
             bd=0,
             relief='flat',
@@ -132,7 +132,7 @@ class Calculator:
     def create_buttons(self):
         """Создание кнопок калькулятора"""
         buttons = [
-            ('C', 1, 0), ('√', 1, 1), ('⌫', 1, 2), ('÷', 1, 3),  
+            ('C', 1, 0), ('√', 1, 1), ('<-', 1, 2), ('÷', 1, 3),  
             ('7', 2, 0), ('8', 2, 1), ('9', 2, 2), ('×', 2, 3),
             ('4', 3, 0), ('5', 3, 1), ('6', 3, 2), ('-', 3, 3),
             ('1', 4, 0), ('2', 4, 1), ('3', 4, 2), ('+', 4, 3),
@@ -156,7 +156,7 @@ class Calculator:
                 bg_color = self.colors['operator_bg']
                 fg_color = self.colors['operator_fg']
                 hover_color = self.colors['operator_hover']
-            elif text in ['C', '√', '⌫']:
+            elif text in ['C', '√', '<-']:
                 bg_color = self.colors['special_bg']
                 fg_color = self.colors['special_fg']
                 hover_color = self.colors['special_hover']
@@ -181,7 +181,7 @@ class Calculator:
             btn = tk.Button(
                 self.window,
                 text=text,
-                font=('Arial', 20, 'bold'),
+                font=('DejaVu', 20, 'bold'),
                 bg=bg_color,
                 fg=fg_color,
                 activebackground=hover_color,
@@ -252,7 +252,7 @@ class Calculator:
         key = event.char
         keys_mapping = {
             '\r': '=',
-            '\x08': '⌫',  
+            '\x08': '<-',  
             '*': '×',
             'x': '×',
             'X': '×',
@@ -264,12 +264,12 @@ class Calculator:
         if key in keys_mapping:
             key = keys_mapping[key]
         
-        if key in '0123456789.+-/=×÷√' or key == 'C' or key == '⌫':  
+        if key in '0123456789.+-/=×÷√' or key == 'C' or key == '<-':  
             self.process_input(key)
     
     def backspace(self, event):
         """Обработка специальной клавиши Backspace"""
-        self.process_input('⌫')
+        self.process_input('<-')
     
     def process_input(self, value):
         """Обработка ввода"""
@@ -278,7 +278,7 @@ class Calculator:
         try:
             if value == 'C':
                 self.display_var.set('')
-            elif value == '⌫':  
+            elif value == '<-':  
                 if current_text:
                     self.display_var.set(current_text[:-1])
             elif value == '=':
