@@ -82,8 +82,8 @@ python calc5.0_FINALLY.py
 bar-calculator/
 │
 ├── calc5.0_FINALLY.py      # Основной файл приложения
-├── README.txt         # Документация (этот файл)
-└── requirements.txt   # Список зависимостей
+├── README.txt              # Документация (этот файл)
+└── requirements.txt        # Список зависимостей
 ```
 🔧 Возможные проблемы и решения
 
