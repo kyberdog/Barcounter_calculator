@@ -239,7 +239,6 @@ class Calculator:
     def bind_events(self):
         """Привязка событий клавиатуры"""
         self.window.bind('<Key>', self.key_press)
-        self.window.bind('<BackSpace>', self.backspace)
         self.window.focus_set()
     
     def button_click(self, event):
@@ -249,7 +248,13 @@ class Calculator:
     
     def key_press(self, event):
         """Обработка нажатия клавиш"""
-        key = event.char
+        # Предотвращаем стандартную обработку для специальных клавиш
+        if event.char in '0123456789.+-*/':
+            # Для обычных символов предотвращаем стандартную обработку
+            # и обрабатываем их самостоятельно
+            self.process_key_input(event.char)
+            return "break"  # Предотвращаем стандартную обработку
+        
         keys_mapping = {
             '\r': '=',
             '\x08': '<-',  
@@ -258,18 +263,34 @@ class Calculator:
             'X': '×',
             's': '√',
             'S': '√',
-            '/': '÷'  
+            '/': '÷',
+            'c': 'C',
+            'C': 'C'
         }
         
-        if key in keys_mapping:
-            key = keys_mapping[key]
-        
-        if key in '0123456789.+-/=×÷√' or key == 'C' or key == '<-':  
+        if event.char in keys_mapping:
+            key = keys_mapping[event.char]
             self.process_input(key)
+            return "break"  # Предотвращаем стандартную обработку
+        
+        # Для Backspace обрабатываем отдельно
+        if event.keysym == 'BackSpace':
+            self.process_input('<-')
+            return "break"  # Предотвращаем стандартную обработку
     
-    def backspace(self, event):
-        """Обработка специальной клавиши Backspace"""
-        self.process_input('<-')
+    def process_key_input(self, key):
+        """Обработка ввода с клавиатуры для обычных символов"""
+        current_text = self.display_var.get()
+        
+        # Заменяем символы для отображения
+        display_key = key
+        if key == '*':
+            display_key = '×'
+        elif key == '/':
+            display_key = '÷'
+            
+        new_text = current_text + display_key
+        self.display_var.set(new_text)
     
     def process_input(self, value):
         """Обработка ввода"""
@@ -292,7 +313,7 @@ class Calculator:
                         return
                     self.display_var.set(math.sqrt(num))
             else:
-                # Заменяем × на * и ÷ на / для вычислений
+                # Для операторов заменяем отображаемые символы
                 display_value = value
                 if value == '×':
                     display_value = '*'
