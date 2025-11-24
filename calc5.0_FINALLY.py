@@ -238,59 +238,55 @@ class Calculator:
     
     def bind_events(self):
         """Привязка событий клавиатуры"""
+        # Привязываемся к окну
         self.window.bind('<Key>', self.key_press)
+        
+        # Разрешаем стандартную обработку в Entry для цифр и букв
+        # Но перехватываем специальные клавиши
+        self.display.bind('<Key>', self.entry_key_press)
+        
         self.window.focus_set()
     
-    def button_click(self, event):
-        """Обработка клика по кнопке"""
-        text = event.widget.cget('text')
-        self.process_input(text)
-    
-    def key_press(self, event):
-        """Обработка нажатия клавиш"""
-        # Предотвращаем стандартную обработку для специальных клавиш
-        if event.char in '0123456789.+-*/':
-            # Для обычных символов предотвращаем стандартную обработку
-            # и обрабатываем их самостоятельно
-            self.process_key_input(event.char)
-            return "break"  # Предотвращаем стандартную обработку
+    def entry_key_press(self, event):
+        """Обработка нажатия клавиш в Entry"""
+        # Разрешаем стандартную обработку для цифр, букв и некоторых символов
+        allowed_chars = set('0123456789.+-*/')
         
+        if event.char in allowed_chars:
+            # Разрешаем стандартную обработку
+            return
+        
+        # Для специальных клавиш обрабатываем самостоятельно
         keys_mapping = {
             '\r': '=',
             '\x08': '<-',  
-            '*': '×',
-            'x': '×',
-            'X': '×',
-            's': '√',
-            'S': '√',
-            '/': '÷',
             'c': 'C',
-            'C': 'C'
+            'C': 'C',
+            's': '√',
+            'S': '√'
         }
         
         if event.char in keys_mapping:
-            key = keys_mapping[event.char]
-            self.process_input(key)
+            self.process_input(keys_mapping[event.char])
             return "break"  # Предотвращаем стандартную обработку
         
         # Для Backspace обрабатываем отдельно
         if event.keysym == 'BackSpace':
             self.process_input('<-')
             return "break"  # Предотвращаем стандартную обработку
-    
-    def process_key_input(self, key):
-        """Обработка ввода с клавиатуры для обычных символов"""
-        current_text = self.display_var.get()
         
-        # Заменяем символы для отображения
-        display_key = key
-        if key == '*':
-            display_key = '×'
-        elif key == '/':
-            display_key = '÷'
-            
-        new_text = current_text + display_key
-        self.display_var.set(new_text)
+        # Для всех остальных клавиш разрешаем стандартную обработку
+    
+    def key_press(self, event):
+        """Обработка нажатия клавиш в основном окне"""
+        # Обработка Escape
+        if event.keysym == 'Escape':
+            self.process_input('C')
+    
+    def button_click(self, event):
+        """Обработка клика по кнопке"""
+        text = event.widget.cget('text')
+        self.process_input(text)
     
     def process_input(self, value):
         """Обработка ввода"""
@@ -312,6 +308,9 @@ class Calculator:
                         messagebox.showerror("Упс!", "Корень из отрицательного числа!")
                         return
                     self.display_var.set(math.sqrt(num))
+                else:
+                    # Если поле пустое, вставляем символ корня
+                    self.display_var.set('√')
             else:
                 # Для операторов заменяем отображаемые символы
                 display_value = value
